@@ -1,0 +1,15 @@
+Epoch: 1, loss: 0.54481, Test accuracy: 0.75354
+Epoch: 2, loss: 0.37263, Test accuracy: 0.89293
+Epoch: 3, loss: 0.20113, Test accuracy: 0.87677
+Epoch: 4, loss: 0.14471, Test accuracy: 0.90505
+Epoch: 5, loss: 0.29212, Test accuracy: 0.91313
+Epoch: 6, loss: 0.21142, Test accuracy: 0.90101
+Epoch: 7, loss: 0.35105, Test accuracy: 0.89293
+Epoch: 8, loss: 0.28568, Test accuracy: 0.89697
+Epoch: 9, loss: 0.06208, Test accuracy: 0.91111
+Epoch: 10, loss: 0.06787, Test accuracy: 0.92323
+Epoch: 11, loss: 0.16814, Test accuracy: 0.92323
+Epoch: 12, loss: 0.09458, Test accuracy: 0.89899
+Epoch: 13, loss: 0.10786, Test accuracy: 0.92727
+Epoch: 14, loss: 0.03053, Test accuracy: 0.91919
+Epoch: 15, loss: 0.00827, Test accuracy: 0.92929

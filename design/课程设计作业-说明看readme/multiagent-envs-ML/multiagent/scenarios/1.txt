@@ -1,0 +1,104 @@
+def agent_reward(self, agent, world):
+        # Agents are negatively rewarded if caught by adversaries
+        # rew = 0
+        # adversaries = self.adversaries(world)
+        # # 碰撞惩罚
+        # if agent.collide:
+        #     for a in adversaries:
+        #         if self.is_collision(a, agent):
+        #             rew -= 10
+        # for i, landmark in enumerate(world.landmarks):
+        #     if not landmark.boundary:
+        #         if self.is_collision(landmark, agent):
+        #             rew -= 10
+        # for i, border in enumerate(world.borders):
+        #     if self.is_collision(border, agent):
+        #         rew -= 10
+
+        # dist = np.sqrt(
+        #     np.sum(np.square(agent.state.p_pos - world.check[0].state.p_pos)))
+        # # 距离check点越远，惩罚越大
+        # rew -= 0.5 * dist
+        # if dist < agent.size + world.check[0].size:
+        #     # 完成任务的奖励
+        #     rew += 12
+        global last_dist_determinate
+        rew = 0
+        agents = self.good_agents(world)
+        adversaries = self.adversaries(world)
+        # 碰撞惩罚
+        if agent.collide:
+            for a in adversaries:
+                if self.is_collision(a, agent):
+                    rew -= 10
+        for i, landmark in enumerate(world.landmarks):
+            if not landmark.boundary:
+                if self.is_collision(landmark, agent):
+                    rew -= 40
+        for i, border in enumerate(world.borders):
+            if self.is_collision(border, agent):
+                rew -= 100
+        dist = np.sqrt(
+            np.sum(np.square(agent.state.p_pos - world.check[0].state.p_pos)))
+        # 距离check点越远，惩罚越大
+        rew -= 10 * (dist - last_dist_determinate)
+        # print("agent  ", dist)
+        rew -= 0.2 * dist
+        for i, landmark in enumerate(world.landmarks):
+            delta_pos = landmark.state.p_pos - agent.state.p_pos
+            dist1 = np.sqrt(np.sum(np.square(delta_pos)))
+            # print(dist1)
+            if dist1 < 0.12:
+                rew -= 10
+        if dist < agent.size + world.check[0].size:
+            # 完成任务的奖励
+            rew += 100
+        if dist > 0.5 and dist < 1:
+            # 完成任务的奖励
+            rew += 1
+        if dist > 0.2 and dist < 0.5:
+            # 完成任务的奖励
+            rew += 5
+        if dist > 0.1 and dist < 0.2:
+            # 完成任务的奖励
+            rew += 10
+        if dist < 0.1:
+            # 完成任务的奖励
+            rew += 15
+        if dist < 0.8:
+            rew += 40 * (0.8 - dist)
+        for adv in adversaries:#0.1
+            dist2 = min([np.sqrt(np.sum(np.square(a.state.p_pos - adv.state.p_pos)))
+                    for a in agents])
+            rew += 2 * dist2
+            # rew += 100 * (dist2 - last_dist_pursue)
+        last_dist_determinate = dist
+        # rew -= dist 
+        return rew
+
+    def adversary_reward(self, agent, world):
+        # Adversaries are rewarded for collisions with agents
+        global last_dist_pursue
+        rew = 0
+        shape = True
+        agents = self.good_agents(world)
+        adversaries = self.adversaries(world)
+        # reward can optionally be shaped (decreased reward for increased distance from agents)
+        for adv in adversaries:#0.1
+            # rew += 20 * \
+            #     min([np.sqrt(np.sum(np.square(a.state.p_pos - adv.state.p_pos)))
+            #         for a in agents])
+            dist = min([np.sqrt(np.sum(np.square(a.state.p_pos - adv.state.p_pos)))
+                    for a in agents])
+            # print("adverse  ", dist)
+        if agent.collide:
+            for ag in agents:
+                for adv in adversaries:
+                    if self.is_collision(ag, adv):
+                        # rew += 10
+                        rew -= 10
+        rew += 10 * (dist - last_dist_determinate)
+        if dist < 0.08:
+            rew -= 0.1
+        last_dist_pursue = dist
+        return rew
